@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ExCiph</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
+  
+  <script>
+    (() => {
+      function simpleHash(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = (hash << 5) - hash + str.charCodeAt(i);
+        hash |= 0; // Convert to 32-bit integer
+      }
+      return str[0] + Math.abs(hash).toString(36); // Menghasilkan kombinasi huruf & angka
+    }
+    
+    console.log(simpleHash("container"));
+    console.log(simpleHash("input-wrap"));
+    });
+  </script>
+  
+  
+</head>
+<body>
+  <h1 class="text-animasi">ExCiph Project</h1>
+  
+  <div class="container">
+      <label for="plaintext">Enter Text</label>
+      <input id="plaintext" placeholder="Type text...">
+  
+      <label for="method">Method</label>
+      <select id="method">
+        <option value="SHA-256">SHA-256</option>
+        <option value="SHA-1">SHA-1</option>
+      </select>
+  
+      <label for="result">Result</label>
+      <textarea id="result" rows="3" disabled placeholder="result..."></textarea>
+  
+      <button id="resetBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="reset-svg"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Reset</button>
+    </div>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", (e) => {
+      console.log(e.target.tagName)
+      const iconReset = document.getElementById("reset-svg");
+      const t = document.getElementById("plaintext");
+      const m = document.getElementById("method");
+      const r = document.getElementById("result");
+      const resetBtn = document.getElementById("resetBtn");
+      
+      m.addEventListener("change", () => {
+        if (t.value) hash(t.value, m.value)
+      });
+  
+      resetBtn.addEventListener("click", () => {
+        if (!t.value || !m.value || !r.value) return
+        
+        requestAnimationFrame(() => {
+          t.value = "";
+          m.value = "SHA-256";
+          r.value = "";
+  
+          iconReset.classList.add("reset-active");
+        });
+      });
+  
+      iconReset.addEventListener("animationend", () => {
+          iconReset.classList.remove("reset-active");
+      });
+  
+      let typingTimer;
+      const typingDelay = 500;
+  
+      t.addEventListener("input", () => {
+        clearTimeout(typingTimer);
+  
+        typingTimer = setTimeout(() => {
+          const text = t.value;
+          const method = m.value;
+  
+          console.log(text)
+          if (text) hash(text, method);
+        }, typingDelay);
+      });
+  
+      async function hash(text, method) {
+        if (!text) return;
+        const hashMethods = {
+          "SHA-256": hashSHA256,
+          "SHA-1": hashSHA1,
+        };
+        if (!hashMethods[method]) {
+          console.error("Metode hashing tidak valid!");
+          return;
+        }
+        try {
+          r.value = await hashMethods[method](text);
+        } catch (err) {
+          alert("Terjadi kesalahan dalam hashing: " + err.message);
+        }
+      }
+  
+      async function hashSHA256(text) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(text);
+        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+        return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, "0")).join("");
+      }
+  
+      async function hashSHA1(text) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(text);
+        const hashBuffer = await crypto.subtle.digest("SHA-1", data);
+        return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, "0")).join("");
+      }
+    });
+  </script>
+  
+    <script>
+    (function() {
+      window.onerror = function(message, source, lineno, colno, error) {
+        if (!source.includes("document")) {
+          console.error(`Error di baris ${lineno}, kolom ${colno}: ${message}`);
+        } else {
+          console.warn("⚠ Warning: Kesalahan terkait `document` diabaikan.");
+        }
+      };
+    })();
+  </script>
+</body>
+</html>
