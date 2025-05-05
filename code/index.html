@@ -1,14 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ExCiph</title>
+  <!-- Essential Meta Tags -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <!-- SEO Meta Tags -->
+  <title>Fast Online Hash Generator | SHA, FNV, XOR & More</title>
+  <meta name="description" content="Generate hashes instantly with our fast, secure, and lightweight online hash generator. Supports SHA-256, SHA-1, FNV-1a, DJB2, SDBM, XOR, and more — all directly in your browser.">
+  <meta name="keywords" content="hash generator, online hash tool, SHA-256, SHA-1, SHA-384, SHA-512, FNV-1a, DJB2, SDBM, XOR hash, browser hashing, secure hash, client-side hash, fast hash tool">
+  <meta name="author" content="abcde432">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)">
+  
+  <!-- International Targeting -->
+  <meta name="language" content="en">
+  <meta http-equiv="Content-Language" content="en">
+  
+  <!-- Open Graph Tags -->
+  <meta property="og:title" content="Online Hash Generator - SHA & More">
+  <meta property="og:description" content="Hash your text in seconds using popular methods like SHA-256, FNV-1a, and XOR – 100% client-side, privacy-first, and PWA-ready.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://abcde439.github.io/ExHash/">
+  <meta property="og:image" content="https://abcde439.github.io/ExHash/image/1.jpg">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Online Hash Generator">
+  <meta name="twitter:description" content="Try our fast, secure, and privacy-first online hash tool. No servers. Just hashing in your browser.">
+  <meta name="twitter:image" content="https://abcde439.github.io/ExHash/image/1.jpg">
+  
+  <!-- PWA Support (Optional for manifest and performance hints) -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="preload" href="style.css" as="style" onload="this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="style.css">
+  </noscript>
 </head>
 <body>
-  <h1>ExCiph Project</h1>
+  <h1>FastHash</h1>
 
   <div class="container">
     <label for="plaintext">Enter Text</label>
@@ -29,13 +65,15 @@
     <label for="result">Result</label>
     <textarea id="result" disabled rows="3" placeholder="result..."></textarea>
 
-    <button class="btn-default" onclick="copy()">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M16 4h2a2 2 0 0 1 2 2v4"/><path d="M21 14H11"/><path d="m15 10-4 4 4 4"/></svg>
-      Copy
-    </button>
-    <button id="resetBtn" class="btn-default">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="reset-svg"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-      Reset</button>
+    <section>
+      <button class="btn-default" onclick="copy()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M16 4h2a2 2 0 0 1 2 2v4"/><path d="M21 14H11"/><path d="m15 10-4 4 4 4"/></svg>
+        Copy
+      </button>
+      <button id="resetBtn" class="btn-default">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="reset-svg"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Reset</button>
+    </section>
   </div>
 
   <script src="script.js" defer></script>
