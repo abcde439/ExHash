@@ -1,11 +1,14 @@
+(() => {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./js/sw.js').then(() => console.log('Service Worker registered')).catch((err) => console.error('SW registration failed:', err));
+  }
+})();
+
 const iconReset = document.getElementById("reset-svg");
 const t = document.getElementById("plaintext");
 const m = document.getElementById("method");
 const r = document.getElementById("result");
 
-m.addEventListener("change", async () => {
-  await hash(t.value, m.value)
-});
 
 function showNotif(text) {
   const notif = document.createElement('div');
@@ -15,7 +18,7 @@ function showNotif(text) {
     top: '-40px',
     left: '50%',
     transform: 'translateX(-50%)',
-    background: 'var(--accent)',
+    background: '#0066ff',
     color: '#fff',
     padding: '0.6rem 1.2rem',
     fontSize: '0.9rem',
@@ -25,19 +28,13 @@ function showNotif(text) {
     opacity: '0.9',
     zIndex: '9999',
   });
-
   document.body.appendChild(notif);
-
-  // Muncul ke bawah sedikit
   requestAnimationFrame(() => {
     notif.style.top = '20px';
   });
-
-  // Hilang setelah 2.5 detik
   setTimeout(() => {
     notif.style.top = '-40px';
     notif.style.opacity = '0';
-    // Hapus setelah animasi
     setTimeout(() => {
       notif.remove();
     }, 400);
@@ -88,17 +85,17 @@ async function hash(text, method) {
   };
   // Non crypto hash
   function fnv1aHash(str) {
-    let hash = 0x811c9dc5; // offset basis
+    let hash = 0x811c9dc5;
     for (let i = 0; i < str.length; i++) {
       hash ^= str.charCodeAt(i);
-      hash = (hash * 0x01000193) >>> 0; // prime
+      hash = (hash * 0x01000193) >>> 0;
     }
-    return ("0000000" + hash.toString(16)).slice(-8); // Hex 8-digit
+    return ("0000000" + hash.toString(16)).slice(-8);
   }
   function djb2Hash(str) {
     let hash = 5381;
     for (let i = 0; i < str.length; i++) {
-      hash = ((hash << 5) + hash) + str.charCodeAt(i); // hash * 33 + c
+      hash = ((hash << 5) + hash) + str.charCodeAt(i);
     }
     return (hash >>> 0).toString(16);
   }
