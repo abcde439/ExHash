@@ -43,6 +43,15 @@
     <link rel="stylesheet" href="style.min.css">
   </noscript>
 </head>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').then(() => {
+      console.log("Service Worker registered!");
+    }).catch(error => {
+      console.error("Service Worker failed:", error);
+    });
+  }
+</script>
 <body>
   <h1>FastHash</h1>
   <div class="container">
@@ -73,13 +82,6 @@
   </div>
 
   <script src="script.min.js" defer></script>
-  <script>
-    if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/service-worker.js")
-        .then(() => console.log("✅ Service Worker registered successfully!"))
-        .catch((error) => console.log("❌ Service Worker registration failed:", error));
-}
-  </script>
   
 </body>
 </html>
