@@ -2,8 +2,9 @@ const CACHE_NAME = 'exhash-cache-v1';
 const FILES_TO_CACHE = [
   '/',
   '/index.html',
-  './styles/style.css',
-  './js/script.js',
+  '/styles/style.css',
+  '/js/script.js',
+  '/favicon.ico',
 ];
 
 self.addEventListener('install', (event) => {
@@ -12,7 +13,7 @@ self.addEventListener('install', (event) => {
       return cache.addAll(FILES_TO_CACHE);
     })
   );
-  self.skipWaiting(); // aktif langsung
+  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
@@ -21,7 +22,7 @@ self.addEventListener('activate', (event) => {
       Promise.all(
         keyList.map((key) => {
           if (key !== CACHE_NAME) {
-            return caches.delete(key); // hapus cache lama
+            return caches.delete(key);
           }
         })
       )

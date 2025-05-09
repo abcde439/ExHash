@@ -1,15 +1,59 @@
 (() => {
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./js/sw.js').then(() => console.log('Service Worker registered')).catch((err) => console.error('SW registration failed:', err));
+    navigator.serviceWorker.register('js/sw.js')
   }
 })();
 
+(() => {
 const iconReset = document.getElementById("reset-svg");
 const t = document.getElementById("plaintext");
 const m = document.getElementById("method");
 const r = document.getElementById("result");
 
+m.addEventListener("change", async() => {
+  await hash(t.value, m.value)
+})
+document.getElementById("circle-btn").addEventListener("click", (e) => {
+  if (e.target.closest("#copy-btn")) {
+    copy()
+  } else if (e.target.closest("#resetBtn")) {
+    reset()
+  }
+})
+let typingTimer;
+t.addEventListener("input", () => {
+  clearTimeout(typingTimer);
 
+  typingTimer = setTimeout(() => {
+    const text = t.value;
+    const method = m.value;
+    hash(text, method);
+  }, 500);
+});
+
+let rotasi = 1
+function reset() {
+  if (!t.value && !r.value) return;
+
+  requestAnimationFrame(() => {
+    t.value = "";
+    m.value = "SHA-256";
+    r.value = "";
+
+    iconReset.style.transform = `rotate(-${360 * rotasi}deg)`
+    rotasi++
+  });
+};
+function copy() {
+  if (!r.value) return
+  
+  try {
+    navigator.clipboard.writeText(r.value);
+    showNotif("⚡Copy")
+  } catch (err) {
+    showNotif("🔥Error");
+  }
+}
 function showNotif(text) {
   const notif = document.createElement('div');
   notif.textContent = text;
@@ -40,44 +84,10 @@ function showNotif(text) {
     }, 400);
   }, 2500);
 }
-
-function copy() {
-  if (!r.value) return
-  
-  try {
-    navigator.clipboard.writeText(r.value);
-    showNotif("⚡Copy")
-  } catch (err) {
-    showNotif("🔥Error");
-  }
-}
-
-let rotasi = 1
-document.getElementById("resetBtn").addEventListener("click", () => {
+function saveExitData() {
   if (!t.value && !r.value) return;
-
-  requestAnimationFrame(() => {
-    t.value = "";
-    m.value = "SHA-256";
-    r.value = "";
-
-    iconReset.style.transform = `rotate(-${360 * rotasi}deg)`
-    rotasi++
-  });
-});
-
-let typingTimer;
-
-t.addEventListener("input", () => {
-  clearTimeout(typingTimer);
-
-  typingTimer = setTimeout(() => {
-    const text = t.value;
-    const method = m.value;
-    hash(text, method);
-  }, 500);
-});
-
+  localStorage.setItem("_IR_user_", JSON.stringify({"text": t.value, "metode": m.value, "output": r.value}));
+}
 async function hash(text, method) {
   if (!text || !method) {
     r.value = ""
@@ -161,3 +171,17 @@ async function hash(text, method) {
     alert("Error on hashing");
   }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (!localStorage.getItem("_IR_user_")) return;
+
+  const data = JSON.parse(localStorage.getItem("_IR_user_"))
+  t.value = data.text;
+  m.value = data.metode;
+  r.value = data.output;
+}, {once:true});
+window.addEventListener("beforeunload", saveExitData, {once:true});
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) saveExitData();
+}, {once:true});
+})();
